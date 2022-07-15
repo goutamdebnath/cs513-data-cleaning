@@ -1,0 +1,377 @@
+#@begin Parallel_OR #@desc Parallel OpenRefine Workflow
+#@param expression:value.replace(/\\s+/,'_')
+#@param separator:to
+#@param newColumnName:Season1StartDate
+#@param oldColumnName:Season1Date_2
+#@param newColumnName:Season1EndDate
+#@param expression:value.trim()
+#@param expression:grel:value.replace(/^\\d{1,4}$|^\\d{5}-\\d{5,}$/,"")
+#@param expression:value
+#@param expression:value.toDate()
+#@param oldColumnName:Season1Date_1
+#@param expression:grel:value.replace(/[nN]V/[aA]|[nN][00][nN][eE]/,"")
+#@param removeOriginalColumn:False
+#@in Twitter_1
+#@in Season1Date_3
+#@in Twitter
+#@in Season1Date_2
+#@in Season2Date
+#@in MarketName_2
+#@in Season1Date
+#@in Twitter_2
+#@in street
+#@in Season1Date_1
+#@in updateTime
+#@in Website
+#@in Website_2
+#@in street_3
+#@in Facebook_2
+#@in Season1EndDate_4
+#@in Youtube_2
+#@in OtherMedia
+#@in y
+#@in Facebook_1
+#@in Season1Date_1_1
+#@in MarketName_3
+#@in Season3Date
+#@in x
+#@in Season1EndDate
+#@in zip
+#@in Website_1
+#@in County_1
+#@in Season1Date_2_1
+#@in city_2
+#@in city
+#@in Season1StartDate
+#@in Season1EndDate_1
+#@in OtherMedia_1
+#@in Season1EndDate_3
+#@in Season4Time
+#@in MarketName
+#@in MarketName_1
+#@in Youtube_1
+#@in Youtube
+#@in city_3
+#@in street_2
+#@in Season3Time
+#@in Season4Date
+#@in Season2Time
+#@in zip_1
+#@in Facebook_3
+#@in Facebook
+#@in County
+#@in Facebook_4
+#@in OtherMedia_2
+#@in Season1EndDate_2
+#@in city_1
+#@in street_1
+#@in OtherMedia_3
+#@out CleanData
+#@begin core/text-transform0 #@desc Text transform on cells in column MarketName using expression value.trim()
+#@param expression:value.trim()
+#@in MarketName
+#@out MarketName_1
+#@end core/text-transform0
+#@begin core/text-transform1 #@desc Text transform on cells in column MarketName using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in MarketName_1
+#@out MarketName_2
+#@end core/text-transform1
+#@begin core/text-transform2 #@desc Text transform on cells in column Website using expression value.trim()
+#@param expression:value.trim()
+#@in Website
+#@out Website_1
+#@end core/text-transform2
+#@begin core/text-transform3 #@desc Text transform on cells in column Facebook using expression value.trim()
+#@param expression:value.trim()
+#@in Facebook
+#@out Facebook_1
+#@end core/text-transform3
+#@begin core/text-transform4 #@desc Text transform on cells in column Facebook using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in Facebook_1
+#@out Facebook_2
+#@end core/text-transform4
+#@begin core/text-transform5 #@desc Text transform on cells in column Facebook using expression grel:value.replace(/[nN]V/[aA]|[nN][00][nN][eE]/,\"\")
+#@param expression:grel:value.replace(/[nN]V/[aA]|[nN][00][nN][eE]/,"")
+#@in Facebook_2
+#@out Facebook_3
+#@end core/text-transform5
+#@begin core/text-transform6 #@desc Text transform on cells in column Twitter using expression value.trim()
+#@param expression:value.trim()
+#@in Twitter
+#@out Twitter_1
+#@end core/text-transform6
+#@begin core/text-transform7 #@desc Text transform on cells in column Twitter using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in Twitter_1
+#@out Twitter_2
+#@end core/text-transform7
+#@begin core/text-transform8 #@desc Text transform on cells in column Youtube using expression value.trim()
+#@param expression:value.trim()
+#@in Youtube
+#@out Youtube_1
+#@end core/text-transform8
+#@begin core/text-transform9 #@desc Text transform on cells in column Youtube using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in Youtube_1
+#@out Youtube_2
+#@end core/text-transform9
+#@begin core/text-transform10 #@desc Text transform on cells in column OtherMedia using expression value.trim()
+#@param expression:value.trim()
+#@in OtherMedia
+#@out OtherMedia_1
+#@end core/text-transform10
+#@begin core/text-transform11 #@desc Text transform on cells in column OtherMedia using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in OtherMedia_1
+#@out OtherMedia_2
+#@end core/text-transform11
+#@begin core/text-transform12 #@desc Text transform on cells in column street using expression value.trim()
+#@param expression:value.trim()
+#@in street
+#@out street_1
+#@end core/text-transform12
+#@begin core/text-transform13 #@desc Text transform on cells in column street using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in street_1
+#@out street_2
+#@end core/text-transform13
+#@begin core/text-transform14 #@desc Text transform on cells in column city using expression value.trim()
+#@param expression:value.trim()
+#@in city
+#@out city_1
+#@end core/text-transform14
+#@begin core/text-transform15 #@desc Text transform on cells in column city using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in city_1
+#@out city_2
+#@end core/text-transform15
+#@begin core/text-transform16 #@desc Text transform on cells in column zip using expression value.trim()
+#@param expression:value.trim()
+#@in zip
+#@out zip_1
+#@end core/text-transform16
+#@begin core/text-transform17 #@desc Text transform on cells in column zip using expression grel:value.replace(/^\\d{1,4}$|^\\d{5}-\\d{5,}$/,\"\")
+#@param expression:grel:value.replace(/^\\d{1,4}$|^\\d{5}-\\d{5,}$/,"")
+#@in zip_1
+#@out zip_2
+#@end core/text-transform17
+#@begin core/text-transform18 #@desc Text transform on cells in column Season1Date using expression value.trim()
+#@param expression:value.trim()
+#@in Season1Date
+#@out Season1Date_1
+#@end core/text-transform18
+#@begin core/text-transform19 #@desc Text transform on cells in column Season1Date using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in Season1Date_1
+#@out Season1Date_2
+#@end core/text-transform19
+#@begin core/column-split20 #@desc Split column Season1Date by separator
+#@param removeOriginalColumn:False
+#@param separator:to
+#@in Season1Date_2
+#@out Season1Date_3
+#@out Season1Date_1_1
+#@out Season1Date_2_1
+#@end core/column-split20
+#@begin core/column-rename21 #@desc Rename column Season1Date 1 to Season1StartDate
+#@param oldColumnName:Season1Date_1
+#@param newColumnName:Season1StartDate
+#@in Season1Date_1_1
+#@out Season1StartDate
+#@end core/column-rename21
+#@begin core/column-rename22 #@desc Rename column Season1Date 2 to Season1EndDate
+#@param oldColumnName:Season1Date_2
+#@param newColumnName:Season1EndDate
+#@in Season1Date_2_1
+#@out Season1EndDate
+#@end core/column-rename22
+#@begin core/text-transform23 #@desc Text transform on cells in column Season1StartDate using expression value.toDate()
+#@param expression:value.toDate()
+#@in Season1StartDate
+#@out Season1StartDate_1
+#@end core/text-transform23
+#@begin core/text-transform24 #@desc Text transform on cells in column Season1EndDate using expression value.toDate()
+#@param expression:value.toDate()
+#@in Season1EndDate
+#@out Season1EndDate_1
+#@end core/text-transform24
+#@begin core/text-transform25 #@desc Text transform on cells in column Season1EndDate using expression value.toDate()
+#@param expression:value.toDate()
+#@in Season1EndDate_1
+#@out Season1EndDate_2
+#@end core/text-transform25
+#@begin core/text-transform26 #@desc Text transform on cells in column Season1EndDate using expression value.trim()
+#@param expression:value.trim()
+#@in Season1EndDate_2
+#@out Season1EndDate_3
+#@end core/text-transform26
+#@begin core/text-transform27 #@desc Text transform on cells in column Season1EndDate using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in Season1EndDate_3
+#@out Season1EndDate_4
+#@end core/text-transform27
+#@begin core/text-transform28 #@desc Text transform on cells in column Season1EndDate using expression value.toDate()
+#@param expression:value.toDate()
+#@in Season1EndDate_4
+#@out Season1EndDate_5
+#@end core/text-transform28
+#@begin core/column-removal29 #@desc Remove column Season1Date
+#@in Season1Date_3
+#@out remove-Season1Date
+#@end core/column-removal29
+#@begin core/column-removal30 #@desc Remove column Season2Date
+#@in Season2Date
+#@out remove-Season2Date
+#@end core/column-removal30
+#@begin core/column-removal31 #@desc Remove column Season2Time
+#@in Season2Time
+#@out remove-Season2Time
+#@end core/column-removal31
+#@begin core/column-removal32 #@desc Remove column Season3Date
+#@in Season3Date
+#@out remove-Season3Date
+#@end core/column-removal32
+#@begin core/column-removal33 #@desc Remove column Season3Time
+#@in Season3Time
+#@out remove-Season3Time
+#@end core/column-removal33
+#@begin core/column-removal34 #@desc Remove column Season4Date
+#@in Season4Date
+#@out remove-Season4Date
+#@end core/column-removal34
+#@begin core/column-removal35 #@desc Remove column Season4Time
+#@in Season4Time
+#@out remove-Season4Time
+#@end core/column-removal35
+#@begin core/text-transform36 #@desc Text transform on cells in column x using expression value.trim()
+#@param expression:value.trim()
+#@in x
+#@out x_1
+#@end core/text-transform36
+#@begin core/text-transform37 #@desc Text transform on cells in column y using expression value.trim()
+#@param expression:value.trim()
+#@in y
+#@out y_1
+#@end core/text-transform37
+#@begin core/text-transform38 #@desc Text transform on cells in column updateTime using expression value.toDate()
+#@param expression:value.toDate()
+#@in updateTime
+#@out updateTime_1
+#@end core/text-transform38
+#@begin core/text-transform39 #@desc Text transform on cells in column OtherMedia using expression value.trim()
+#@param expression:value.trim()
+#@in OtherMedia_2
+#@out OtherMedia_3
+#@end core/text-transform39
+#@begin core/text-transform40 #@desc Text transform on cells in column OtherMedia using expression value.replace(/\\s+/,' ')
+#@param expression:value.replace(/\\s+/,'_')
+#@in OtherMedia_3
+#@out OtherMedia_4
+#@end core/text-transform40
+#@begin core/mass-edit41 #@desc Mass edit cells in column MarketName
+#@param expression:value
+#@in MarketName_2
+#@out MarketName_3
+#@end core/mass-edit41
+#@begin core/mass-edit42 #@desc Mass edit cells in column MarketName
+#@param expression:value
+#@in MarketName_3
+#@out MarketName_4
+#@end core/mass-edit42
+#@begin core/mass-edit43 #@desc Mass edit cells in column city
+#@param expression:value
+#@in city_2
+#@out city_3
+#@end core/mass-edit43
+#@begin core/mass-edit44 #@desc Mass edit cells in column city
+#@param expression:value
+#@in city_3
+#@out city_4
+#@end core/mass-edit44
+#@begin core/mass-edit45 #@desc Mass edit cells in column County
+#@param expression:value
+#@in County
+#@out County_1
+#@end core/mass-edit45
+#@begin core/mass-edit46 #@desc Mass edit cells in column County
+#@param expression:value
+#@in County_1
+#@out County_2
+#@end core/mass-edit46
+#@begin core/mass-edit47 #@desc Mass edit cells in column street
+#@param expression:value
+#@in street_2
+#@out street_3
+#@end core/mass-edit47
+#@begin core/mass-edit48 #@desc Mass edit cells in column street
+#@param expression:value
+#@in street_3
+#@out street_4
+#@end core/mass-edit48
+#@begin core/mass-edit49 #@desc Mass edit cells in column Youtube
+#@param expression:value
+#@in Youtube_2
+#@out Youtube_3
+#@end core/mass-edit49
+#@begin core/mass-edit50 #@desc Mass edit cells in column Twitter
+#@param expression:value
+#@in Twitter_2
+#@out Twitter_3
+#@end core/mass-edit50
+#@begin core/mass-edit51 #@desc Mass edit cells in column Facebook
+#@param expression:value
+#@in Facebook_3
+#@out Facebook_4
+#@end core/mass-edit51
+#@begin core/mass-edit52 #@desc Mass edit cells in column Facebook
+#@param expression:value
+#@in Facebook_4
+#@out Facebook_5
+#@end core/mass-edit52
+#@begin core/mass-edit53 #@desc Mass edit cells in column Website
+#@param expression:value
+#@in Website_1
+#@out Website_2
+#@end core/mass-edit53
+#@begin core/mass-edit54 #@desc Mass edit cells in column Website
+#@param expression:value
+#@in Website_2
+#@out Website_3
+#@end core/mass-edit54
+#@begin CombineDataCleaningChanges
+#@in MarketName_4
+#@in Website_3
+#@in Facebook_5
+#@in Twitter_3
+#@in Youtube_3
+#@in OtherMedia_4
+#@in street_4
+#@in city_4
+#@in zip_2
+#@in Season1Date_3
+#@in Season1Date_1
+#@in Season1StartDate_1
+#@in Season1Date_2
+#@in Season1EndDate_5
+#@in remove-Season1Date
+#@in Season2Date
+#@in remove-Season2Date
+#@in Season2Time
+#@in remove-Season2Time
+#@in Season3Date
+#@in remove-Season3Date
+#@in Season3Time
+#@in remove-Season3Time
+#@in Season4Date
+#@in remove-Season4Date
+#@in Season4Time
+#@in remove-Season4Time
+#@in x_1
+#@in y_1
+#@in updateTime_1
+#@in County_2
+#@out CleanData
+#@end CombineDataCleaningChanges
+#@end Parallel_OR
