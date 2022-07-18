@@ -1,0 +1,6 @@
+
+java -jar yesworkflow-0.2.0-jar-with-dependencies.jar extract FarmersMarketDataCleaning-YW.py -c extract.listfile > FarmersMarket.exctract.listlife
+java -jar yesworkflow-0.2.0-jar-with-dependencies.jar graph -c graph.layout=TB -c graph.view=COMBINED FarmersMarketDataCleaning-YW.py > FarmersMarketDataCleaning-YW.gv
+
+dot -Tpdf FarmersMarketDataCleaning-YW.gv -o FarmersMarketDataCleaning-YW.pdf 
+dot -Tpng FarmersMarketDataCleaning-YW.gv -o FarmersMarketDataCleaning-YW.png

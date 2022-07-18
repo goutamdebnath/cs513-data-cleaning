@@ -1,0 +1,147 @@
+
+/* Start of top-level graph */
+digraph Workflow {
+rankdir=TB
+
+/* Title for graph */
+fontname=Helvetica; fontsize=18; labelloc=t
+label="PYTHON-DATA-CLEANING-PROCESS"
+
+/* Start of double cluster for drawing box around nodes in workflow */
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; penwidth=0
+
+/* Style for nodes representing atomic programs in workflow */
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing atomic programs in workflow */
+TransformToPandasDF
+FindInvalidZipCode
+FindInvalidCity
+FindInvalidState
+FindInvalidCounty
+"Iterate:Missing_Zip"
+"Iterate:Missing_City"
+"Iterate:Missing_State"
+"Iterate:Missing_County"
+"getGISByCoordinates(Zip)"
+"getGISByCoordinates(City)"
+"getGISByCoordinates(State)"
+"getGISByCoordinates(County)"
+UpdatedZip
+UpdatedCity
+UpdatedState
+UpdatedCounty
+JoinResults
+"PHASE2-CLEANING"
+"PHASE2:FindInvalidZip"
+"PHASE2:Iterate:Missing_Zip"
+"PHASE2:getZipCodeByCity"
+"PHASE2:FindInvalidCounty"
+"PHASE2:Iterate:Missing_County"
+"PHASE2:getCountyByZipCode"
+"RemoveBlankLatitude/Longitude"
+"Rename_x&y_To_Longitude&Latutude"
+ConvertDataframeToCSV
+
+/* Style for nodes representing non-parameter data channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes for non-parameter data channels in workflow */
+Clean_Farmers_Market_Data [shape=record rankdir=LR label="{<f0> Clean_Farmers_Market_Data |<f1> file\:\{filepath\}\farmersmarkets_clean_openrefine_python.csv}"];
+farmers_market_missing_zip_city [shape=record rankdir=LR label="{<f0> farmers_market_missing_zip_city |<f1> file\:\{filepath\}\farmersmarkets_clean_openrefine.csv}"];
+PANDAS_DATAFRAME
+INVALID_ZIPCODE_RECORDS
+INVALID_CITY_RECORDS
+INVALID_STATE_RECORDS
+INVALID_COUNTY_RECORDS
+COMBINED_DATASET
+"PHASE2:INVALID_ZIP_RECORDS"
+"PHASE2:UpdateMissingZip"
+"PHASE2:INVALID_COUNTY_RECORDS"
+"PHASE2:UpdateMissingCounty"
+CLEAN_DATASET
+
+/* Style for nodes representing parameter channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing parameter channels in workflow */
+
+/* Edges representing connections between programs and channels */
+TransformToPandasDF -> PANDAS_DATAFRAME
+farmers_market_missing_zip_city -> TransformToPandasDF
+FindInvalidZipCode -> INVALID_ZIPCODE_RECORDS
+PANDAS_DATAFRAME -> FindInvalidZipCode
+FindInvalidCity -> INVALID_CITY_RECORDS
+PANDAS_DATAFRAME -> FindInvalidCity
+FindInvalidState -> INVALID_STATE_RECORDS
+PANDAS_DATAFRAME -> FindInvalidState
+FindInvalidCounty -> INVALID_COUNTY_RECORDS
+PANDAS_DATAFRAME -> FindInvalidCounty
+"Iterate:Missing_Zip" -> "getGISByCoordinates(Zip)"
+INVALID_ZIPCODE_RECORDS -> "Iterate:Missing_Zip"
+"Iterate:Missing_City" -> "getGISByCoordinates(City)"
+INVALID_CITY_RECORDS -> "Iterate:Missing_City"
+"Iterate:Missing_State" -> "getGISByCoordinates(State)"
+INVALID_STATE_RECORDS -> "Iterate:Missing_State"
+"Iterate:Missing_County" -> "getGISByCoordinates(County)"
+INVALID_COUNTY_RECORDS -> "Iterate:Missing_County"
+Latitude -> "getGISByCoordinates(Zip)"
+Longitude -> "getGISByCoordinates(Zip)"
+Latitude -> "getGISByCoordinates(City)"
+Longitude -> "getGISByCoordinates(City)"
+Latitude -> "getGISByCoordinates(State)"
+Longitude -> "getGISByCoordinates(State)"
+Latitude -> "getGISByCoordinates(County)"
+Longitude -> "getGISByCoordinates(County)"
+"getGISByCoordinates(Zip)" -> UpdatedZip
+"getGISByCoordinates(City)" -> UpdatedCity
+"getGISByCoordinates(State)" -> UpdatedState
+"getGISByCoordinates(County)" -> UpdatedCounty
+JoinResults -> COMBINED_DATASET
+UpdatedZip -> JoinResults
+UpdatedCity -> JoinResults
+UpdatedState -> JoinResults
+UpdatedCounty -> JoinResults
+COMBINED_DATASET -> "PHASE2-CLEANING"
+"PHASE2:FindInvalidZip" -> "PHASE2:INVALID_ZIP_RECORDS"
+"PHASE2-CLEANING" -> "PHASE2:FindInvalidZip"
+"PHASE2:INVALID_ZIP_RECORDS" -> "PHASE2:Iterate:Missing_Zip"
+"PHASE2:getZipCodeByCity" -> "PHASE2:UpdateMissingZip"
+CITY -> "PHASE2:getZipCodeByCity"
+"PHASE2:Iterate:Missing_Zip" -> "PHASE2:getZipCodeByCity"
+"PHASE2:FindInvalidCounty" -> "PHASE2:INVALID_COUNTY_RECORDS"
+"PHASE2:UpdateMissingZip" -> "PHASE2:FindInvalidCounty"
+"PHASE2:INVALID_COUNTY_RECORDS" -> "PHASE2:Iterate:Missing_County"
+"PHASE2:getCountyByZipCode" -> "PHASE2:UpdateMissingCounty"
+"PHASE2:Iterate:Missing_County" -> "PHASE2:getCountyByZipCode"
+Zip -> "PHASE2:getCountyByZipCode"
+"PHASE2:UpdateMissingCounty" -> "RemoveBlankLatitude/Longitude"
+"Rename_x&y_To_Longitude&Latutude" -> CLEAN_DATASET
+"RemoveBlankLatitude/Longitude" -> "Rename_x&y_To_Longitude&Latutude"
+ConvertDataframeToCSV -> Clean_Farmers_Market_Data
+CLEAN_DATASET -> ConvertDataframeToCSV
+
+/* End of double cluster for drawing box around nodes in workflow */
+}}
+
+/* Style for nodes representing workflow input ports */
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+
+/* Nodes representing workflow input ports */
+farmers_market_missing_zip_city_input_port [label=""]
+
+/* Style for nodes representing workflow output ports */
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+
+/* Nodes representing workflow output ports */
+Clean_Farmers_Market_Data_output_port [label=""]
+
+/* Edges from input ports to channels */
+farmers_market_missing_zip_city_input_port -> farmers_market_missing_zip_city
+
+/* Edges from channels to output ports */
+Clean_Farmers_Market_Data -> Clean_Farmers_Market_Data_output_port
+
+/* End of top-level graph */
+}

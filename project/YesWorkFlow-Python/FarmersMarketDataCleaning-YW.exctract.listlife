@@ -1,0 +1,127 @@
+@BEGIN PYTHON-DATA-CLEANING-PROCESS
+@PARAM filepath
+@IN farmers_market_missing_zip_city  @URI file:{filepath}\farmersmarkets_clean_openrefine.csv
+@OUT Clean_Farmers_Market_Data  @URI file:{filepath}\farmersmarkets_clean_openrefine_python.csv
+@BEGIN TransformToPandasDF
+@IN farmers_market_missing_zip_city
+@OUT PANDAS_DATAFRAME
+@END TransformToPandasDF
+@BEGIN FindInvalidZipCode
+@IN PANDAS_DATAFRAME
+@OUT INVALID_ZIPCODE_RECORDS
+@END FindInvalidZipCode
+@BEGIN FindInvalidCity
+@IN PANDAS_DATAFRAME
+@OUT INVALID_CITY_RECORDS
+@END FindInvalidCity
+@BEGIN FindInvalidState
+@IN PANDAS_DATAFRAME
+@OUT INVALID_STATE_RECORDS
+@END FindInvalidCity
+@BEGIN FindInvalidCounty
+@IN PANDAS_DATAFRAME
+@OUT INVALID_COUNTY_RECORDS
+@END FindInvalidCounty
+@BEGIN Iterate:Missing_Zip
+@IN INVALID_ZIPCODE_RECORDS
+@OUT getGISByCoordinates(Zip)
+@BEGIN GISByCoordinates:ZIP
+@END GISByCoordinates:ZIP
+print(f'Latitude : {latitude} and Longitude {longitude} --> {zipcode}')
+@END Iterate:Missing_Zip
+@BEGIN Iterate:Missing_City
+@IN INVALID_CITY_RECORDS
+@OUT getGISByCoordinates(City)
+@BEGIN GISByCoordinates:CITY
+@END GISByCoordinates:CITY
+print(f'Latitude : {latitude} and Longitude {longitude} --> {city}')
+@END Iterate:Missing_City
+@BEGIN Iterate:Missing_State
+@IN INVALID_STATE_RECORDS
+@OUT getGISByCoordinates(State)
+print(f'Latitude : {latitude} and Longitude {longitude} --> {state}')
+@END Iterate:Missing_State
+@BEGIN Iterate:Missing_County
+@IN INVALID_COUNTY_RECORDS
+@OUT getGISByCoordinates(County)
+print(f'Latitude : {latitude} and Longitude {longitude} --> {county}')
+@END Iterate:Missing_County
+@BEGIN getGISByCoordinates(Zip)
+@PARAM y @AS Latitude
+@PARAM x @AS Longitude
+@END getGISByCoordinates(Zip)
+@BEGIN getGISByCoordinates(City)
+@PARAM y @AS Latitude
+@PARAM x @AS Longitude
+@END getGISByCoordinates(City)
+@BEGIN getGISByCoordinates(State)
+@PARAM y @AS Latitude
+@PARAM x @AS Longitude
+@END getGISByCoordinates(State)
+@BEGIN getGISByCoordinates(County)
+@PARAM y @AS Latitude
+@PARAM x @AS Longitude
+@END getGISByCoordinates(County)
+-------------------------------------
+@BEGIN UpdatedZip
+@IN getGISByCoordinates(Zip)
+@END UpdatedZip
+@BEGIN UpdatedCity
+@IN getGISByCoordinates(City)
+@END UpdatedCity
+@BEGIN UpdatedState
+@IN getGISByCoordinates(State)
+@END UpdatedState
+@BEGIN UpdatedCounty
+@IN getGISByCoordinates(County)
+@END UpdatedCounty
+@BEGIN JoinResults
+@IN UpdatedZip
+@IN UpdatedCity
+@IN UpdatedState
+@IN UpdatedCounty
+@OUT COMBINED_DATASET
+@END JoinResults
+-------------------------------------
+@BEGIN PHASE2-CLEANING
+@IN COMBINED_DATASET
+@END PHASE2-CLEANING
+PHASE 2 Clean up, find the invalid data using 1st pass.
+Attempt to resolve FMID (1001904, 1002348, 1001903)
+@BEGIN PHASE2:FindInvalidZip
+@IN PHASE2-CLEANING
+@OUT PHASE2:INVALID_ZIP_RECORDS
+@END PHASE2:FindInvalidZip
+@BEGIN PHASE2:Iterate:Missing_Zip
+@IN PHASE2:INVALID_ZIP_RECORDS
+@END PHASE2:Iterate:Missing_Zip
+@BEGIN PHASE2:getZipCodeByCity
+@PARAM CITY
+@IN PHASE2:Iterate:Missing_Zip
+@OUT PHASE2:UpdateMissingZip
+@END PHASE2:getZipCodeByCity
+@BEGIN PHASE2:FindInvalidCounty
+@IN PHASE2:UpdateMissingZip
+@OUT PHASE2:INVALID_COUNTY_RECORDS
+@END PHASE2:FindInvalidCounty
+@BEGIN PHASE2:Iterate:Missing_County
+@IN PHASE2:INVALID_COUNTY_RECORDS
+@END PHASE2:Iterate:Missing_County
+@BEGIN PHASE2:getCountyByZipCode
+@IN PHASE2:Iterate:Missing_County
+@PARAM Zip
+@OUT PHASE2:UpdateMissingCounty
+@END PHASE2:getCountyByZipCode
+@BEGIN RemoveBlankLatitude/Longitude
+@IN PHASE2:UpdateMissingCounty
+@END RemoveBlankLatitude/Longitude
+@BEGIN Rename_x&y_To_Longitude&Latutude
+@IN RemoveBlankLatitude/Longitude
+@OUT CLEAN_DATASET
+@END Rename_x&y_To_Longitude&Latutude
+@BEGIN ConvertDataframeToCSV
+@IN CLEAN_DATASET
+@OUT Clean_Farmers_Market_Data @URI file:{filepath}\farmersmarkets_clean_openrefine_python.csv
+@END ConvertDataframeToCSV
+@END PYTHON-DATA-CLEANING-PROCESS
+RUN THE CODE AS python3 FarmersMarketDataCleaning-YW.py PATH_0F_FARMERS_MARKET_DATA.CSV
