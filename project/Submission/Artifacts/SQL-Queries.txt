@@ -1,0 +1,169 @@
+/* Query total number of rows in cleaned csv file8 */
+
+SELECT count(*) FROM farmersmarkets_clean_openrefine_python;
+
+/* Output - 8636 - Total number of rows in cleaned csv file */
+
+/* FMID values should be all unique */
+
+SELECT COUNT(distinct FMID) - COUNT(*) FROM farmersmarkets_clean_openrefine_python;
+/* Output - 0 rows */
+
+/* Latitude and longitude numbers should be in decimal degrees format and range from -90 to 90
+ for latitude and -180 to 180 for longitude. For example, Washington DC has a latitude 38.8951 and longitude -77.0364 */
+ 
+SELECT m.fmid, m.marketname, m.latitude, m.longitude 
+FROM   farmersmarkets_clean_openrefine_python m 
+WHERE  ( Cast(m.longitude AS FLOAT) > 180 
+          OR Cast(m.longitude AS FLOAT) <- 180 
+          OR Cast(m.latitude AS FLOAT) < -90 
+          OR Cast(m.latitude AS FLOAT) > 90 ) 
+        OR ( m.latitude IS NULL 
+              OR m.longitude IS NULL 
+              OR m.latitude = '' 
+              OR m.longitude = '' ); 
+
+/* Output - 0 rows*/
+			  
+/* If we have non-empty values for latitude or longitude , we should have non-empty values for city, State, County and zip */
+
+SELECT m.FMID, m.MarketName, m.city, m.State, m.County, m.zip, m.latitude, m.longitude 
+FROM farmersmarkets_clean_openrefine_python m
+WHERE (m.latitude != "" AND m.longitude!="") AND (m.zip ="" OR m.State==""  or m.County="" OR m.city="" OR m.State is NULL or m.city is NULL OR m.County is NULL OR m.zip is NULL );
+ 
+/* 3 rows returned from query above which have either empty City, State or County
+   1001904	Denali Farmers Market	     Anchorage	  Alaska	NULL	NULL	62.3163	-150.234
+   1002348	Dillingham Farmers Market	 Dillingham	  Alaska	NULL	99576	59.0397	-158.458
+   1001903	Trapper Creek Farmers Market TrapperCreek Alaska	NULL	99683	53.8748	-166.54 */
+   
+/* Update the 3 rows above manually with information from the web using UPDATE command */
+
+UPDATE farmersmarkets_clean_openrefine_python
+SET County = 'Anchorage',
+    zip = '99645'
+WHERE
+    FMID='1001904';
+
+UPDATE farmersmarkets_clean_openrefine_python
+SET County = 'Dillingham'
+WHERE
+    FMID='1002348';
+
+UPDATE farmersmarkets_clean_openrefine_python
+SET County = 'Matanuska-Susitna'
+WHERE
+    FMID='1001903';
+	
+/*  For all markets which have non-empty values for Season1StartDate and Season1EndDate, the Season1EndDate should be greater than Season1StartDate */
+
+SELECT m.FMID, m.MarketName, m.Season1StartDate, m.Season1EndDate,  JULIANDAY(m.Season1EndDate) - JULIANDAY(m.Season1StartDate) AS date_difference, JULIANDAY(m.Season1EndDate) - JULIANDAY(m.Season1StartDate) + 1 AS days_inclusive
+FROM farmersmarkets_clean_openrefine_python m
+WHERE  (m.Season1StartDate != "" AND m.Season1EndDate!="") AND (date_difference < 0);
+	
+/* One invalid row returned from above query which has Season1EndDate < Season1StartDate
+1011959	Clark Park Farmer's Market	2016-10-01	2016-05-07	-147.0	-146.0
+*/
+
+/* The above row is manually updated in SQLITE3 using the UPDATE command and swapping the column values */
+
+UPDATE farmersmarkets_clean_openrefine_python
+SET Season1StartDate =  Season1EndDate,
+Season1EndDate = Season1StartDate
+WHERE
+    FMID='1011959'
+	
+/* All states in the database should be valid */
+
+ SELECT DISTINCT m.State 
+ FROM farmersmarkets_clean_openrefine_python m 
+ WHERE m.State NOT IN ('Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming');
+ 
+/* Output
+District of Columbia
+Virgin Islands
+Puerto Rico
+*/
+
+/* Number of distinct states in the database should be 52 */
+
+SELECT COUNT(DISTINCT m.State) 
+FROM farmersmarkets_clean_openrefine_python m;
+
+/* Output 53 
+We have a total of 53 distinct states in the database with 3 invalid states as shown above. The query below finds the first 5 records which include State names that are not in the list of valid 52 US states. 
+100 such records were found which included the invalid states (District of Columbia, Virgin Islands, Puerto Rico) but the query prints the first 5 records. 
+These rows were not cleaned as this was irrelevant to our U1 use case */
+
+SELECT
+ m.FMID, m.MarketName, m.State
+FROM
+	farmersmarkets_clean_openrefine_python m
+WHERE
+	m.State NOT IN ('Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming')
+	LIMIT 5;
+
+/* Output: 5 rows (A potential way to clean then would have been to delete these rows using SQLITE3)
+1008071	14&U Farmers' Market	District of Columbia
+1012710	14th & Kennedy Street Farmers Market	District of Columbia
+1008006	Adams Morgan Farmers Market	District of Columbia
+1004881	Anne Heyliger Vegetable Market	Virgin Islands
+1012474	Arcadia's Mobile Market -- Barry Farm Recreation Center	District of Columbia
+*/
+
+/* Target Use Case - U1
+Find city, state, zip of all farmers markets which meet the below criteria:
+1. Are within a 20 mile radius from the San Francisco (latitude = 37.783062, longitude = -122.460989) using the The Haversine Formula  (https://martech.zone/calculate-great-circle-distance/) 
+2. Have a social media presence (Facebook page) to access reviews
+3. Sell organic food
+4. Accept Credit Cards
+5. Are opened in a particular month (December)
+6. Are opened on weekends (Saturday or Sunday) */
+
+SELECT
+    m.FMID, m.MarketName, m.city,m.State, m.zip,ROUND(m.latitude,2) AS latitude,ROUND(m.longitude,2) AS longitude,m.Facebook,m.Organic, m.Credit,m.Season1StartDate, m.Season1EndDate,m.Season1Time,(
+      ROUND(3959 * acos (
+      cos ( radians(37.783062) )
+      * cos( radians( latitude ) )
+      * cos( radians( longitude ) - radians(-122.460989) )
+      + sin ( radians(37.783072) )
+      * sin( radians( latitude ) )
+    ),2)
+) AS distance
+FROM farmersmarkets_clean_openrefine_python m
+WHERE distance < 20 AND m.Facebook != '' AND m.Organic = 'Y' AND m.Credit = 'Y' AND (strftime('%m',m.Season1StartDate) = '12' or strftime('%m',m.Season1EndDate) = '12') AND (m.Season1Time LIKE '%Sat%' or m.Season1Time LIKE '%sat%' or m.Season1Time LIKE '%Sun%' or m.Season1Time LIKE '%sun%')  ORDER BY distance ASC;
+
+/* FMID     MarketName                                               city           State       zip    latitude  longitude  Facebook                                                                                Organic  Credit  Season1StartDate  Season1EndDate  Season1Time                                                        distance
+-------  -------------------------------------------------------  -------------  ----------  -----  --------  ---------  --------------------------------------------------------------------------------------  -------  ------  ----------------  --------------  -----------------------------------------------------------------  --------
+1002741  Fort Mason Center Certified Farmers' Market              San Francisco  California  94123  37.81     -122.43    https://www.Facebook.com/FMCFarmersMkt                                                  Y        Y       2016-01-01        2016-12-31      Sun: 9:30 AM-1:30 PM;                                              1.59    
+1005759  Heart of the City Farmers' Market                        San Francisco  California  94102  37.78     -122.41    https://www.facebook.com/pages/Heart-of-the-City-Farmers-Market/164898116861011?ref=hl  Y        Y       2014-01-01        2014-12-31      Wed: 7:00 AM-5:30 PM;Sun: 7:00 AM-5:00 PM;                         2.0     
+1011656  Ferry Plaza Farmers Market                               San Francisco  California  94111  37.8      -122.39    https://www.facebook.com/CUESA?fref=ts                                                  Y        Y       2015-01-01        2015-12-31      Tue: 10:00 AM-2:00 PM;Thu: 10:00 AM-2:00 PM;Sat: 8:00 AM-2:00 PM;  3.42    
+1012534  Stonestown Farmers Market                                San Francisco  California  94132  37.73     -122.48    https://www.facebook.com/StonestownFarmersMarket/?fref=ts                               Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                              3.43    
+1012074  CUESA Jack London Square Farmers Market                  Oakland        California  94607  37.79     -122.28    https://www.facebook.com/jacklondonsqfm/                                                Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-2:00 PM;                                              9.94    
+1009019  Alameda Farmers' Market                                  Alameda        California  94501  37.77     -122.28    https://www.facebook.com/AlamedaFarmersMarket                                           Y        Y       2013-01-01        2013-12-31      Tue: 9:00 AM-1:00 PM;Sat: 9:00 AM-1:00 PM;                         9.95    
+1012529  Grand Lake-Oakland Farmers Market                        Oakland        California  94610  37.81     -122.25    https://www.facebook.com/GrandLakeFarmersMarket/                                        Y        Y       2016-01-01        2016-12-31      Sat: 9:00 AM-2:00 PM;                                              11.68   
+1012530  Sunday Civic Center Farmers Market                       San Rafael     California  94903  38.0      -122.53    https://www.facebook.com/MarinFarmersMarkets/?fref=ts                                   Y        Y       2016-01-01        2016-12-31      Sun: 8:00 AM-1:00 PM;                                              15.25   
+1011348  Pinole Farmers' Market                                   Pinole         California  94564  38.01     -122.29    https://www.facebook.com/PinoleFarmersMarket                                            Y        Y       2015-01-01        2015-12-31      Sat: 9:00 AM-1:00 PM;                                              17.9    
+1011495  College of San Mateo Certified Farmers' Market           San Mateo      California  94403  37.53     -122.34    facebook.com/CollegeofSanMateoFarmersMarket                                             Y        Y       2015-01-01        2015-12-31      Sat: 9:00 AM-1:00 PM;                                              18.47   
+1002743  Moraga Certified Farmers Market                          Moraga         California  94556  37.83     -122.13    https://www.facebook.com/MHFarmersMkt                                                   Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                              18.47   
+1002736  San Leandro Certified Farmers' Market at Bayfair Center  San Leandro    California  95678  37.7      -122.13    https://www.facebook.com/BayfairFarmersMkt  */                                            Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                              19.11   
+
+
+/* Minor Use Case
+Find first 5 farmers markets that are there in a particular City and State which accept Credit cards as mode of payment */
+
+SELECT
+ m.FMID, m.MarketName, m.City, m.State, m.Credit
+FROM
+	farmersmarkets_clean_openrefine_python m
+WHERE m.city = 'San Francisco' AND m.State = 'California' AND m.Credit = 'Y'
+LIMIT 5;
+
+/* Output 1011460	Castro Certified Farmers' Market	San Francisco	California	Y
+1012527	Clement St. Farmers Market	San Francisco	California	Y
+1011426	Divisadero Certified Farmers' Market	San Francisco	California	Y
+1011656	Ferry Plaza Farmers Market	San Francisco	California	Y
+1002741	Fort Mason Center Certified Farmers' Market	San Francisco	California	Y */
+
+
+
+
