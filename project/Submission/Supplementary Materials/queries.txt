@@ -113,14 +113,16 @@ WHERE
 /* Target Use Case - U1
 Find city, state, zip of all farmers markets which meet the below criteria:
 1. Are within a 20 mile radius from the San Francisco (latitude = 37.783062, longitude = -122.460989) using the The Haversine Formula  (https://martech.zone/calculate-great-circle-distance/) 
-2. Have a social media presence (Facebook page) to access reviews
+2. Have a valid social media presence (Facebook page) which can be used to check market’s rating and reviews. 
+	a. The URL must start with “https://” 
+	b. Followed by “www.facebook.com” 
 3. Sell organic food
 4. Accept Credit Cards
 5. Are opened in a particular month (December)
 6. Are opened on weekends (Saturday or Sunday) */
 
 SELECT
-    m.FMID, m.MarketName, m.city,m.State, m.zip,ROUND(m.latitude,2) AS latitude,ROUND(m.longitude,2) AS longitude,m.Facebook,m.Organic, m.Credit,m.Season1StartDate, m.Season1EndDate,m.Season1Time,(
+    m.FMID, m.MarketName, m.city,m.zip,(
       ROUND(3959 * acos (
       cos ( radians(37.783062) )
       * cos( radians( latitude ) )
@@ -128,25 +130,24 @@ SELECT
       + sin ( radians(37.783072) )
       * sin( radians( latitude ) )
     ),2)
-) AS distance
+) AS distance, m.Facebook, m.Organic, m.Credit, m.Season1StartDate, m.Season1EndDate, m.Season1Time
 FROM farmersmarkets_clean_openrefine_python m
-WHERE distance < 20 AND m.Facebook != '' AND m.Organic = 'Y' AND m.Credit = 'Y' AND (strftime('%m',m.Season1StartDate) = '12' or strftime('%m',m.Season1EndDate) = '12') AND (m.Season1Time LIKE '%Sat%' or m.Season1Time LIKE '%sat%' or m.Season1Time LIKE '%Sun%' or m.Season1Time LIKE '%sun%')  ORDER BY distance ASC;
+WHERE distance < 20 AND m.Facebook LIKE 'https://www.facebook.com%' AND m.Organic = 'Y' AND m.Credit = 'Y'                                                                                                                                                                                                                                             AND (strftime('%m',m.Season1StartDate) = '12' or strftime('%m',m.Season1EndDate) = '12') AND                                                                                                                                                                                                                                                           (m.Season1Time LIKE '%Sat%' or m.Season1Time LIKE '%sat%' or m.Season1Time LIKE '%Sun%'                                                                                                                                                                                                                                                                or m.Season1Time LIKE '%sun%')  ORDER BY distance ASC;
 
-/* FMID     MarketName                                               city           State       zip    latitude  longitude  Facebook                                                                                Organic  Credit  Season1StartDate  Season1EndDate  Season1Time                                                        distance
--------  -------------------------------------------------------  -------------  ----------  -----  --------  ---------  --------------------------------------------------------------------------------------  -------  ------  ----------------  --------------  -----------------------------------------------------------------  --------
-1002741  Fort Mason Center Certified Farmers' Market              San Francisco  California  94123  37.81     -122.43    https://www.Facebook.com/FMCFarmersMkt                                                  Y        Y       2016-01-01        2016-12-31      Sun: 9:30 AM-1:30 PM;                                              1.59    
-1005759  Heart of the City Farmers' Market                        San Francisco  California  94102  37.78     -122.41    https://www.facebook.com/pages/Heart-of-the-City-Farmers-Market/164898116861011?ref=hl  Y        Y       2014-01-01        2014-12-31      Wed: 7:00 AM-5:30 PM;Sun: 7:00 AM-5:00 PM;                         2.0     
-1011656  Ferry Plaza Farmers Market                               San Francisco  California  94111  37.8      -122.39    https://www.facebook.com/CUESA?fref=ts                                                  Y        Y       2015-01-01        2015-12-31      Tue: 10:00 AM-2:00 PM;Thu: 10:00 AM-2:00 PM;Sat: 8:00 AM-2:00 PM;  3.42    
-1012534  Stonestown Farmers Market                                San Francisco  California  94132  37.73     -122.48    https://www.facebook.com/StonestownFarmersMarket/?fref=ts                               Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                              3.43    
-1012074  CUESA Jack London Square Farmers Market                  Oakland        California  94607  37.79     -122.28    https://www.facebook.com/jacklondonsqfm/                                                Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-2:00 PM;                                              9.94    
-1009019  Alameda Farmers' Market                                  Alameda        California  94501  37.77     -122.28    https://www.facebook.com/AlamedaFarmersMarket                                           Y        Y       2013-01-01        2013-12-31      Tue: 9:00 AM-1:00 PM;Sat: 9:00 AM-1:00 PM;                         9.95    
-1012529  Grand Lake-Oakland Farmers Market                        Oakland        California  94610  37.81     -122.25    https://www.facebook.com/GrandLakeFarmersMarket/                                        Y        Y       2016-01-01        2016-12-31      Sat: 9:00 AM-2:00 PM;                                              11.68   
-1012530  Sunday Civic Center Farmers Market                       San Rafael     California  94903  38.0      -122.53    https://www.facebook.com/MarinFarmersMarkets/?fref=ts                                   Y        Y       2016-01-01        2016-12-31      Sun: 8:00 AM-1:00 PM;                                              15.25   
-1011348  Pinole Farmers' Market                                   Pinole         California  94564  38.01     -122.29    https://www.facebook.com/PinoleFarmersMarket                                            Y        Y       2015-01-01        2015-12-31      Sat: 9:00 AM-1:00 PM;                                              17.9    
-1011495  College of San Mateo Certified Farmers' Market           San Mateo      California  94403  37.53     -122.34    facebook.com/CollegeofSanMateoFarmersMarket                                             Y        Y       2015-01-01        2015-12-31      Sat: 9:00 AM-1:00 PM;                                              18.47   
-1002743  Moraga Certified Farmers Market                          Moraga         California  94556  37.83     -122.13    https://www.facebook.com/MHFarmersMkt                                                   Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                              18.47   
-1002736  San Leandro Certified Farmers' Market at Bayfair Center  San Leandro    California  95678  37.7      -122.13    https://www.facebook.com/BayfairFarmersMkt  */                                            Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                              19.11   
-
+/* FMID     MarketName                                               city           zip    distance  Facebook                                                                                Organic  Credit  Season1StartDate  Season1EndDate  Season1Time                                                      
+-------  -------------------------------------------------------  -------------  -----  --------  --------------------------------------------------------------------------------------  -------  ------  ----------------  --------------  -----------------------------------------------------------------
+1002741  Fort Mason Center Certified Farmers' Market              San Francisco  94123  1.59      https://www.Facebook.com/FMCFarmersMkt                                                  Y        Y       2016-01-01        2016-12-31      Sun: 9:30 AM-1:30 PM;                                            
+1005759  Heart of the City Farmers' Market                        San Francisco  94102  2.0       https://www.facebook.com/pages/Heart-of-the-City-Farmers-Market/164898116861011?ref=hl  Y        Y       2014-01-01        2014-12-31      Wed: 7:00 AM-5:30 PM;Sun: 7:00 AM-5:00 PM;                       
+1011656  Ferry Plaza Farmers Market                               San Francisco  94111  3.42      https://www.facebook.com/CUESA?fref=ts                                                  Y        Y       2015-01-01        2015-12-31      Tue: 10:00 AM-2:00 PM;Thu: 10:00 AM-2:00 PM;Sat: 8:00 AM-2:00 PM;
+1012534  Stonestown Farmers Market                                San Francisco  94132  3.43      https://www.facebook.com/StonestownFarmersMarket/?fref=ts                               Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                            
+1012074  CUESA Jack London Square Farmers Market                  Oakland        94607  9.94      https://www.facebook.com/jacklondonsqfm/                                                Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-2:00 PM;                                            
+1009019  Alameda Farmers' Market                                  Alameda        94501  9.95      https://www.facebook.com/AlamedaFarmersMarket                                           Y        Y       2013-01-01        2013-12-31      Tue: 9:00 AM-1:00 PM;Sat: 9:00 AM-1:00 PM;                       
+1012529  Grand Lake-Oakland Farmers Market                        Oakland        94610  11.68     https://www.facebook.com/GrandLakeFarmersMarket/                                        Y        Y       2016-01-01        2016-12-31      Sat: 9:00 AM-2:00 PM;                                            
+1012530  Sunday Civic Center Farmers Market                       San Rafael     94903  15.25     https://www.facebook.com/MarinFarmersMarkets/?fref=ts                                   Y        Y       2016-01-01        2016-12-31      Sun: 8:00 AM-1:00 PM;                                            
+1011348  Pinole Farmers' Market                                   Pinole         94564  17.9      https://www.facebook.com/PinoleFarmersMarket                                            Y        Y       2015-01-01        2015-12-31      Sat: 9:00 AM-1:00 PM;                                            
+1002743  Moraga Certified Farmers Market                          Moraga         94556  18.47     https://www.facebook.com/MHFarmersMkt                                                   Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;                                            
+1002736  San Leandro Certified Farmers' Market at Bayfair Center  San Leandro    95678  19.11     https://www.facebook.com/BayfairFarmersMkt                                              Y        Y       2016-01-01        2016-12-31      Sun: 9:00 AM-1:00 PM;    
+*/
 
 /* Minor Use Case
 Find first 5 farmers markets that are there in a particular City and State which accept Credit cards as mode of payment */
