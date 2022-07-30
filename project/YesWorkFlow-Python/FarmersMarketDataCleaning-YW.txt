@@ -4,3 +4,20 @@ java -jar yesworkflow-0.2.0-jar-with-dependencies.jar graph -c graph.layout=TB -
 
 dot -Tpdf FarmersMarketDataCleaning-YW.gv -o FarmersMarketDataCleaning-YW.pdf 
 dot -Tpng FarmersMarketDataCleaning-YW.gv -o FarmersMarketDataCleaning-YW.png
+
+
+
+
+
+
+
+
+
+
+
+
+java -jar yesworkflow-0.2.0-jar-with-dependencies.jar extract Farmers_Market_DataCleaning.Outer.py -c extract.listfile > Farmers_Market_DataCleaning.Outer.exctract.listfile
+java -jar yesworkflow-0.2.0-jar-with-dependencies.jar graph -c graph.layout=TB -c graph.view=COMBINED Farmers_Market_DataCleaning.Outer.py > Farmers_Market_DataCleaning.Outer.gv
+
+dot -Tpdf Farmers_Market_DataCleaning.Outer.gv -o Farmers_Market_DataCleaning.Outer.pdf 
+dot -Tpng Farmers_Market_DataCleaning.Outer.gv -o Farmers_Market_DataCleaning.Outer.png

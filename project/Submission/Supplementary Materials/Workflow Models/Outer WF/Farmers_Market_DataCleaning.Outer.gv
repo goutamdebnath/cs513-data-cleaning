@@ -1,0 +1,42 @@
+digraph Workflow {
+rankdir=TB
+fontname=Courier; fontsize=18; labelloc=t
+label=DataCleaningProcess
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; color=white
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Courier]
+OpenRefineProcess
+PythonScript
+SQL_Constraint_Check
+Exploratory_Data_Analysis
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+result_map_png [shape=record rankdir=LR label="{<f0> result_map_png |<f1> file\:Exploratory-Us-Farmers-Market-Map.png}"];
+result_chart_png [shape=record rankdir=LR label="{<f0> result_chart_png |<f1> file\:Exploratory-US-Farmers-Market-Count-Per-State.png}"];
+input_data_file [shape=record rankdir=LR label="{<f0> input_data_file |<f1> file\:farmersmarkets-2017-01-10.csv}"];
+Intermediate_Clean_Data [shape=record rankdir=LR label="{<f0> Intermediate_Clean_Data |<f1> file\:farmersmarkets_clean_openrefine.csv}"];
+Final_Clean_Data [shape=record rankdir=LR label="{<f0> Final_Clean_Data |<f1> file\:farmersmarkets_clean_openrefine_python.csv}"];
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+OpenRefineProcess -> Intermediate_Clean_Data
+input_data_file -> OpenRefineProcess
+PythonScript -> Final_Clean_Data
+Intermediate_Clean_Data -> PythonScript
+Final_Clean_Data -> SQL_Constraint_Check
+Exploratory_Data_Analysis -> result_map_png
+Exploratory_Data_Analysis -> result_chart_png
+SQL_Constraint_Check -> Exploratory_Data_Analysis
+}}
+subgraph cluster_input_ports_group_outer { label=""; color=white
+subgraph cluster_input_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+input_data_file_input_port [label=""]
+}}
+subgraph cluster_output_ports_group_outer { label=""; color=white
+subgraph cluster_output_ports_group_inner { label=""; color=white
+node[shape=circle style="rounded,filled" fillcolor="#FFFFFF" peripheries=1 fontname=Helvetica width=0.2]
+result_map_png_output_port [label=""]
+result_chart_png_output_port [label=""]
+}}
+input_data_file_input_port -> input_data_file
+result_map_png -> result_map_png_output_port
+result_chart_png -> result_chart_png_output_port
+}
