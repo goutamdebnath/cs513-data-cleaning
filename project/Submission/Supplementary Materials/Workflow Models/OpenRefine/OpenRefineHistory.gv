@@ -1,0 +1,376 @@
+
+/* Start of top-level graph */
+digraph Workflow {
+rankdir=TB
+
+/* Title for graph */
+fontname=Helvetica; fontsize=18; labelloc=t
+label=Parallel_OR
+
+/* Start of double cluster for drawing box around nodes in workflow */
+subgraph cluster_workflow_box_outer { label=""; color=black; penwidth=2
+subgraph cluster_workflow_box_inner { label=""; penwidth=0
+
+/* Style for nodes representing atomic programs in workflow */
+node[shape=box style=filled fillcolor="#CCFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing atomic programs in workflow */
+"core/text-transform0" [shape=record rankdir=LR label="{<f0> core/text-transform0 |<f1> Text transform on cells in column MarketName using expression value.trim()}"];
+"core/text-transform1" [shape=record rankdir=LR label="{<f0> core/text-transform1 |<f1> Text transform on cells in column MarketName using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform2" [shape=record rankdir=LR label="{<f0> core/text-transform2 |<f1> Text transform on cells in column Website using expression value.trim()}"];
+"core/text-transform3" [shape=record rankdir=LR label="{<f0> core/text-transform3 |<f1> Text transform on cells in column Facebook using expression value.trim()}"];
+"core/text-transform4" [shape=record rankdir=LR label="{<f0> core/text-transform4 |<f1> Text transform on cells in column Facebook using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform5" [shape=record rankdir=LR label="{<f0> core/text-transform5 |<f1> Text transform on cells in column Facebook using expression grel\:value.replace(/[nN]V/[aA]|[nN][00][nN][eE]/,\"\")}"];
+"core/text-transform6" [shape=record rankdir=LR label="{<f0> core/text-transform6 |<f1> Text transform on cells in column Twitter using expression value.trim()}"];
+"core/text-transform7" [shape=record rankdir=LR label="{<f0> core/text-transform7 |<f1> Text transform on cells in column Twitter using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform8" [shape=record rankdir=LR label="{<f0> core/text-transform8 |<f1> Text transform on cells in column Youtube using expression value.trim()}"];
+"core/text-transform9" [shape=record rankdir=LR label="{<f0> core/text-transform9 |<f1> Text transform on cells in column Youtube using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform10" [shape=record rankdir=LR label="{<f0> core/text-transform10 |<f1> Text transform on cells in column OtherMedia using expression value.trim()}"];
+"core/text-transform11" [shape=record rankdir=LR label="{<f0> core/text-transform11 |<f1> Text transform on cells in column OtherMedia using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform12" [shape=record rankdir=LR label="{<f0> core/text-transform12 |<f1> Text transform on cells in column street using expression value.trim()}"];
+"core/text-transform13" [shape=record rankdir=LR label="{<f0> core/text-transform13 |<f1> Text transform on cells in column street using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform14" [shape=record rankdir=LR label="{<f0> core/text-transform14 |<f1> Text transform on cells in column city using expression value.trim()}"];
+"core/text-transform15" [shape=record rankdir=LR label="{<f0> core/text-transform15 |<f1> Text transform on cells in column city using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform16" [shape=record rankdir=LR label="{<f0> core/text-transform16 |<f1> Text transform on cells in column zip using expression value.trim()}"];
+"core/text-transform17" [shape=record rankdir=LR label="{<f0> core/text-transform17 |<f1> Text transform on cells in column zip using expression grel\:value.replace(/^\\d\{1,4\}$|^\\d\{5\}-\\d\{5,\}$/,\"\")}"];
+"core/text-transform18" [shape=record rankdir=LR label="{<f0> core/text-transform18 |<f1> Text transform on cells in column Season1Date using expression value.trim()}"];
+"core/text-transform19" [shape=record rankdir=LR label="{<f0> core/text-transform19 |<f1> Text transform on cells in column Season1Date using expression value.replace(/\\s+/,' ')}"];
+"core/column-split20" [shape=record rankdir=LR label="{<f0> core/column-split20 |<f1> Split column Season1Date by separator}"];
+"core/column-rename21" [shape=record rankdir=LR label="{<f0> core/column-rename21 |<f1> Rename column Season1Date 1 to Season1StartDate}"];
+"core/column-rename22" [shape=record rankdir=LR label="{<f0> core/column-rename22 |<f1> Rename column Season1Date 2 to Season1EndDate}"];
+"core/text-transform23" [shape=record rankdir=LR label="{<f0> core/text-transform23 |<f1> Text transform on cells in column Season1StartDate using expression value.toDate()}"];
+"core/text-transform24" [shape=record rankdir=LR label="{<f0> core/text-transform24 |<f1> Text transform on cells in column Season1EndDate using expression value.toDate()}"];
+"core/text-transform25" [shape=record rankdir=LR label="{<f0> core/text-transform25 |<f1> Text transform on cells in column Season1EndDate using expression value.toDate()}"];
+"core/text-transform26" [shape=record rankdir=LR label="{<f0> core/text-transform26 |<f1> Text transform on cells in column Season1EndDate using expression value.trim()}"];
+"core/text-transform27" [shape=record rankdir=LR label="{<f0> core/text-transform27 |<f1> Text transform on cells in column Season1EndDate using expression value.replace(/\\s+/,' ')}"];
+"core/text-transform28" [shape=record rankdir=LR label="{<f0> core/text-transform28 |<f1> Text transform on cells in column Season1EndDate using expression value.toDate()}"];
+"core/column-removal29" [shape=record rankdir=LR label="{<f0> core/column-removal29 |<f1> Remove column Season1Date}"];
+"core/column-removal30" [shape=record rankdir=LR label="{<f0> core/column-removal30 |<f1> Remove column Season2Date}"];
+"core/column-removal31" [shape=record rankdir=LR label="{<f0> core/column-removal31 |<f1> Remove column Season2Time}"];
+"core/column-removal32" [shape=record rankdir=LR label="{<f0> core/column-removal32 |<f1> Remove column Season3Date}"];
+"core/column-removal33" [shape=record rankdir=LR label="{<f0> core/column-removal33 |<f1> Remove column Season3Time}"];
+"core/column-removal34" [shape=record rankdir=LR label="{<f0> core/column-removal34 |<f1> Remove column Season4Date}"];
+"core/column-removal35" [shape=record rankdir=LR label="{<f0> core/column-removal35 |<f1> Remove column Season4Time}"];
+"core/text-transform36" [shape=record rankdir=LR label="{<f0> core/text-transform36 |<f1> Text transform on cells in column x using expression value.trim()}"];
+"core/text-transform37" [shape=record rankdir=LR label="{<f0> core/text-transform37 |<f1> Text transform on cells in column y using expression value.trim()}"];
+"core/text-transform38" [shape=record rankdir=LR label="{<f0> core/text-transform38 |<f1> Text transform on cells in column updateTime using expression value.toDate()}"];
+"core/text-transform39" [shape=record rankdir=LR label="{<f0> core/text-transform39 |<f1> Text transform on cells in column OtherMedia using expression value.trim()}"];
+"core/text-transform40" [shape=record rankdir=LR label="{<f0> core/text-transform40 |<f1> Text transform on cells in column OtherMedia using expression value.replace(/\\s+/,' ')}"];
+"core/mass-edit41" [shape=record rankdir=LR label="{<f0> core/mass-edit41 |<f1> Mass edit cells in column MarketName}"];
+"core/mass-edit42" [shape=record rankdir=LR label="{<f0> core/mass-edit42 |<f1> Mass edit cells in column MarketName}"];
+"core/mass-edit43" [shape=record rankdir=LR label="{<f0> core/mass-edit43 |<f1> Mass edit cells in column city}"];
+"core/mass-edit44" [shape=record rankdir=LR label="{<f0> core/mass-edit44 |<f1> Mass edit cells in column city}"];
+"core/mass-edit45" [shape=record rankdir=LR label="{<f0> core/mass-edit45 |<f1> Mass edit cells in column County}"];
+"core/mass-edit46" [shape=record rankdir=LR label="{<f0> core/mass-edit46 |<f1> Mass edit cells in column County}"];
+"core/mass-edit47" [shape=record rankdir=LR label="{<f0> core/mass-edit47 |<f1> Mass edit cells in column street}"];
+"core/mass-edit48" [shape=record rankdir=LR label="{<f0> core/mass-edit48 |<f1> Mass edit cells in column street}"];
+"core/mass-edit49" [shape=record rankdir=LR label="{<f0> core/mass-edit49 |<f1> Mass edit cells in column Youtube}"];
+"core/mass-edit50" [shape=record rankdir=LR label="{<f0> core/mass-edit50 |<f1> Mass edit cells in column Twitter}"];
+"core/mass-edit51" [shape=record rankdir=LR label="{<f0> core/mass-edit51 |<f1> Mass edit cells in column Facebook}"];
+"core/mass-edit52" [shape=record rankdir=LR label="{<f0> core/mass-edit52 |<f1> Mass edit cells in column Facebook}"];
+"core/mass-edit53" [shape=record rankdir=LR label="{<f0> core/mass-edit53 |<f1> Mass edit cells in column Website}"];
+"core/mass-edit54" [shape=record rankdir=LR label="{<f0> core/mass-edit54 |<f1> Mass edit cells in column Website}"];
+CombineDataCleaningChanges
+
+/* Style for nodes representing non-parameter data channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FFFFCC" peripheries=1 fontname=Helvetica]
+
+/* Nodes for non-parameter data channels in workflow */
+CleanData
+MarketName
+MarketName_1
+Website
+Facebook
+Facebook_1
+Facebook_2
+Twitter
+Twitter_1
+Youtube
+Youtube_1
+OtherMedia
+OtherMedia_1
+street
+street_1
+city
+city_1
+zip
+zip_1
+Season1Date
+Season1Date_1
+Season1Date_2
+Season1Date_1_1
+Season1Date_2_1
+Season1StartDate
+Season1EndDate
+Season1EndDate_1
+Season1EndDate_2
+Season1EndDate_3
+Season1EndDate_4
+Season1Date_3
+Season2Date
+Season2Time
+Season3Date
+Season3Time
+Season4Date
+Season4Time
+x
+y
+updateTime
+OtherMedia_2
+OtherMedia_3
+MarketName_2
+MarketName_3
+city_2
+city_3
+County
+County_1
+street_2
+street_3
+Youtube_2
+Twitter_2
+Facebook_3
+Facebook_4
+Website_1
+Website_2
+MarketName_4
+Website_3
+Facebook_5
+Twitter_3
+Youtube_3
+OtherMedia_4
+street_4
+city_4
+zip_2
+Season1StartDate_1
+Season1EndDate_5
+"remove-Season1Date"
+"remove-Season2Date"
+"remove-Season2Time"
+"remove-Season3Date"
+"remove-Season3Time"
+"remove-Season4Date"
+"remove-Season4Time"
+x_1
+y_1
+updateTime_1
+County_2
+
+/* Style for nodes representing parameter channels in workflow */
+node[shape=box style="rounded,filled" fillcolor="#FCFCFC" peripheries=1 fontname=Helvetica]
+
+/* Nodes representing parameter channels in workflow */
+"expression:value.trim()"
+"expression:value.replace(/\\s+/,'_')"
+"expression:grel:value.replace(/[nN]V/[aA]|[nN][00][nN][eE]/,\"\")"
+"expression:grel:value.replace(/^\\d{1,4}$|^\\d{5}-\\d{5,}$/,\"\")"
+"removeOriginalColumn:False"
+"separator:to"
+"oldColumnName:Season1Date_1"
+"newColumnName:Season1StartDate"
+"oldColumnName:Season1Date_2"
+"newColumnName:Season1EndDate"
+"expression:value.toDate()"
+"expression:value"
+
+/* Edges representing connections between programs and channels */
+"core/text-transform0" -> MarketName_1
+"expression:value.trim()" -> "core/text-transform0"
+MarketName -> "core/text-transform0"
+"core/text-transform1" -> MarketName_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform1"
+MarketName_1 -> "core/text-transform1"
+"core/text-transform2" -> Website_1
+"expression:value.trim()" -> "core/text-transform2"
+Website -> "core/text-transform2"
+"core/text-transform3" -> Facebook_1
+"expression:value.trim()" -> "core/text-transform3"
+Facebook -> "core/text-transform3"
+"core/text-transform4" -> Facebook_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform4"
+Facebook_1 -> "core/text-transform4"
+"core/text-transform5" -> Facebook_3
+"expression:grel:value.replace(/[nN]V/[aA]|[nN][00][nN][eE]/,\"\")" -> "core/text-transform5"
+Facebook_2 -> "core/text-transform5"
+"core/text-transform6" -> Twitter_1
+"expression:value.trim()" -> "core/text-transform6"
+Twitter -> "core/text-transform6"
+"core/text-transform7" -> Twitter_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform7"
+Twitter_1 -> "core/text-transform7"
+"core/text-transform8" -> Youtube_1
+"expression:value.trim()" -> "core/text-transform8"
+Youtube -> "core/text-transform8"
+"core/text-transform9" -> Youtube_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform9"
+Youtube_1 -> "core/text-transform9"
+"core/text-transform10" -> OtherMedia_1
+"expression:value.trim()" -> "core/text-transform10"
+OtherMedia -> "core/text-transform10"
+"core/text-transform11" -> OtherMedia_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform11"
+OtherMedia_1 -> "core/text-transform11"
+"core/text-transform12" -> street_1
+"expression:value.trim()" -> "core/text-transform12"
+street -> "core/text-transform12"
+"core/text-transform13" -> street_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform13"
+street_1 -> "core/text-transform13"
+"core/text-transform14" -> city_1
+"expression:value.trim()" -> "core/text-transform14"
+city -> "core/text-transform14"
+"core/text-transform15" -> city_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform15"
+city_1 -> "core/text-transform15"
+"core/text-transform16" -> zip_1
+"expression:value.trim()" -> "core/text-transform16"
+zip -> "core/text-transform16"
+"core/text-transform17" -> zip_2
+"expression:grel:value.replace(/^\\d{1,4}$|^\\d{5}-\\d{5,}$/,\"\")" -> "core/text-transform17"
+zip_1 -> "core/text-transform17"
+"core/text-transform18" -> Season1Date_1
+"expression:value.trim()" -> "core/text-transform18"
+Season1Date -> "core/text-transform18"
+"core/text-transform19" -> Season1Date_2
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform19"
+Season1Date_1 -> "core/text-transform19"
+"core/column-split20" -> Season1Date_3
+"core/column-split20" -> Season1Date_1_1
+"core/column-split20" -> Season1Date_2_1
+"removeOriginalColumn:False" -> "core/column-split20"
+"separator:to" -> "core/column-split20"
+Season1Date_2 -> "core/column-split20"
+"core/column-rename21" -> Season1StartDate
+"oldColumnName:Season1Date_1" -> "core/column-rename21"
+"newColumnName:Season1StartDate" -> "core/column-rename21"
+Season1Date_1_1 -> "core/column-rename21"
+"core/column-rename22" -> Season1EndDate
+"oldColumnName:Season1Date_2" -> "core/column-rename22"
+"newColumnName:Season1EndDate" -> "core/column-rename22"
+Season1Date_2_1 -> "core/column-rename22"
+"core/text-transform23" -> Season1StartDate_1
+"expression:value.toDate()" -> "core/text-transform23"
+Season1StartDate -> "core/text-transform23"
+"core/text-transform24" -> Season1EndDate_1
+"expression:value.toDate()" -> "core/text-transform24"
+Season1EndDate -> "core/text-transform24"
+"core/text-transform25" -> Season1EndDate_2
+"expression:value.toDate()" -> "core/text-transform25"
+Season1EndDate_1 -> "core/text-transform25"
+"core/text-transform26" -> Season1EndDate_3
+"expression:value.trim()" -> "core/text-transform26"
+Season1EndDate_2 -> "core/text-transform26"
+"core/text-transform27" -> Season1EndDate_4
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform27"
+Season1EndDate_3 -> "core/text-transform27"
+"core/text-transform28" -> Season1EndDate_5
+"expression:value.toDate()" -> "core/text-transform28"
+Season1EndDate_4 -> "core/text-transform28"
+"core/column-removal29" -> "remove-Season1Date"
+Season1Date_3 -> "core/column-removal29"
+"core/column-removal30" -> "remove-Season2Date"
+Season2Date -> "core/column-removal30"
+"core/column-removal31" -> "remove-Season2Time"
+Season2Time -> "core/column-removal31"
+"core/column-removal32" -> "remove-Season3Date"
+Season3Date -> "core/column-removal32"
+"core/column-removal33" -> "remove-Season3Time"
+Season3Time -> "core/column-removal33"
+"core/column-removal34" -> "remove-Season4Date"
+Season4Date -> "core/column-removal34"
+"core/column-removal35" -> "remove-Season4Time"
+Season4Time -> "core/column-removal35"
+"core/text-transform36" -> x_1
+"expression:value.trim()" -> "core/text-transform36"
+x -> "core/text-transform36"
+"core/text-transform37" -> y_1
+"expression:value.trim()" -> "core/text-transform37"
+y -> "core/text-transform37"
+"core/text-transform38" -> updateTime_1
+"expression:value.toDate()" -> "core/text-transform38"
+updateTime -> "core/text-transform38"
+"core/text-transform39" -> OtherMedia_3
+"expression:value.trim()" -> "core/text-transform39"
+OtherMedia_2 -> "core/text-transform39"
+"core/text-transform40" -> OtherMedia_4
+"expression:value.replace(/\\s+/,'_')" -> "core/text-transform40"
+OtherMedia_3 -> "core/text-transform40"
+"core/mass-edit41" -> MarketName_3
+"expression:value" -> "core/mass-edit41"
+MarketName_2 -> "core/mass-edit41"
+"core/mass-edit42" -> MarketName_4
+"expression:value" -> "core/mass-edit42"
+MarketName_3 -> "core/mass-edit42"
+"core/mass-edit43" -> city_3
+"expression:value" -> "core/mass-edit43"
+city_2 -> "core/mass-edit43"
+"core/mass-edit44" -> city_4
+"expression:value" -> "core/mass-edit44"
+city_3 -> "core/mass-edit44"
+"core/mass-edit45" -> County_1
+"expression:value" -> "core/mass-edit45"
+County -> "core/mass-edit45"
+"core/mass-edit46" -> County_2
+"expression:value" -> "core/mass-edit46"
+County_1 -> "core/mass-edit46"
+"core/mass-edit47" -> street_3
+"expression:value" -> "core/mass-edit47"
+street_2 -> "core/mass-edit47"
+"core/mass-edit48" -> street_4
+"expression:value" -> "core/mass-edit48"
+street_3 -> "core/mass-edit48"
+"core/mass-edit49" -> Youtube_3
+"expression:value" -> "core/mass-edit49"
+Youtube_2 -> "core/mass-edit49"
+"core/mass-edit50" -> Twitter_3
+"expression:value" -> "core/mass-edit50"
+Twitter_2 -> "core/mass-edit50"
+"core/mass-edit51" -> Facebook_4
+"expression:value" -> "core/mass-edit51"
+Facebook_3 -> "core/mass-edit51"
+"core/mass-edit52" -> Facebook_5
+"expression:value" -> "core/mass-edit52"
+Facebook_4 -> "core/mass-edit52"
+"core/mass-edit53" -> Website_2
+"expression:value" -> "core/mass-edit53"
+Website_1 -> "core/mass-edit53"
+"core/mass-edit54" -> Website_3
+"expression:value" -> "core/mass-edit54"
+Website_2 -> "core/mass-edit54"
+CombineDataCleaningChanges -> CleanData
+MarketName_4 -> CombineDataCleaningChanges
+Website_3 -> CombineDataCleaningChanges
+Facebook_5 -> CombineDataCleaningChanges
+Twitter_3 -> CombineDataCleaningChanges
+Youtube_3 -> CombineDataCleaningChanges
+OtherMedia_4 -> CombineDataCleaningChanges
+street_4 -> CombineDataCleaningChanges
+city_4 -> CombineDataCleaningChanges
+zip_2 -> CombineDataCleaningChanges
+Season1Date_3 -> CombineDataCleaningChanges
+Season1Date_1 -> CombineDataCleaningChanges
+Season1StartDate_1 -> CombineDataCleaningChanges
+Season1Date_2 -> CombineDataCleaningChanges
+Season1EndDate_5 -> CombineDataCleaningChanges
+"remove-Season1Date" -> CombineDataCleaningChanges
+Season2Date -> CombineDataCleaningChanges
+"remove-Season2Date" -> CombineDataCleaningChanges
+Season2Time -> CombineDataCleaningChanges
+"remove-Season2Time" -> CombineDataCleaningChanges
+Season3Date -> CombineDataCleaningChanges
+"remove-Season3Date" -> CombineDataCleaningChanges
+Season3Time -> CombineDataCleaningChanges
+"remove-Season3Time" -> CombineDataCleaningChanges
+Season4Date -> CombineDataCleaningChanges
+"remove-Season4Date" -> CombineDataCleaningChanges
+Season4Time -> CombineDataCleaningChanges
+"remove-Season4Time" -> CombineDataCleaningChanges
+x_1 -> CombineDataCleaningChanges
+y_1 -> CombineDataCleaningChanges
+updateTime_1 -> CombineDataCleaningChanges
+County_2 -> CombineDataCleaningChanges
+
+/* End of double cluster for drawing box around nodes in workflow */
+}}
+
+/* End of top-level graph */
+}
